@@ -65,6 +65,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
     @include('scuti::table', compact('table', 'pagination')) 
 @endsection
 ```
+Let's see what we got:
+![Sample table](screenshot.png)
+Easy, isn't it?
 
 ## Column properties
 The following properties to configure all Columns that will be generated on Table.
