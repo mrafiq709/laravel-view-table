@@ -1,0 +1,27 @@
+{
+    "name": "scuti/laravel-table",
+    "description": "Pure blade view table generator",
+    "authors": [
+        {
+            "name": "Scuti Asia",
+            "email": "info@scuti.asia"
+        }
+    ],
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Scuti\\LaravelTable\\ServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Scuti\\LaravelTable\\": "src/"
+        }
+    }
+
+}

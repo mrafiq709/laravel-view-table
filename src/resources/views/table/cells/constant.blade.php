@@ -1,0 +1,1 @@
+<td>{{ $options['values'][$value] ?? $value }}</td>
