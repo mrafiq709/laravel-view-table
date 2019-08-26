@@ -7,6 +7,7 @@
             "email": "info@scuti.asia"
         }
     ],
+    "license": "MIT",
     "require": {},
     "extra": {
         "laravel": {
@@ -23,5 +24,4 @@
             "Scuti\\LaravelTable\\": "src/"
         }
     }
-
 }
