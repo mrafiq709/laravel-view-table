@@ -1,14 +1,6 @@
-@php
-    $class = $table['class'] ?? "table table-responsive-sm table-bordered table-striped table-hover";
-@endphp
-
-<table class="{{ $class }}">
-    @if($table['columns'])
-        @include('scuti::table.header', compact('table'))
-    @endif
-    @if($table['data'])
-        @include('scuti::table.body', compact('table'))
-    @endif
+<table @foreach($attributes as $key => $value) {{$key}}="{!! $value !!}" @endforeach>
+    @include('scuti::table.header')
+    @include('scuti::table.body')
 </table>
 
 @if($pagination)
@@ -19,33 +11,60 @@
 
 @section('styles')
     <style>
-        table th.sortable {
+        table th.orderable {
             cursor: pointer;
+            position: relative;
         }
-        th.sortable .fa-sort {
+        table th.orderable:before,
+        table th.orderable:after,
+        table th.ordering_asc:before,
+        table th.ordering_asc:after,
+        table th.ordering_desc:before,
+        table th.ordering_desc:after {
+            position: absolute;
+            bottom: 0.9em;
+            display: block;
             opacity: 0.3;
+        }
+        table th.orderable:before,
+        table th.ordering_asc:before,
+        table th.ordering_desc:before {
+            right: 1em;
+            content: "\2191";
+        }
+        table th.orderable:after,
+        table th.ordering_asc:after,
+        table th.ordering_desc:after {
+            right: 0.5em;
+            content: "\2193";
+        }
+        table th.ordering_asc:before,
+        table th.ordering_desc:after {
+            opacity: 1;
         }
     </style>
 @endsection
 
-<script type="text/javascript">
-    $('th.sortable').click(function (e) {
-        const sortField = $(e.currentTarget).data('sort');
-        if (typeof handleSort === "function") {
-            //Custom handle
-            handleSort(sortField);
-        } else {
-            //Default handle
-            request = {!! json_encode(request()->all(), JSON_FORCE_OBJECT) !!};
-
-            if (request.sort_by && request.sort_by == sortField) {
-                request.sort = request.sort=='asc' ? 'desc' : 'asc';
+@section('script')
+    <script type="text/javascript">
+        $('th.orderable').click(function (e) {
+            const orderField = $(e.currentTarget).data('order');
+            if (typeof handleOrder === "function") {
+                //Custom handle
+                handleOrder(orderField);
             } else {
-                request.sort_by = sortField;
-                request.sort = 'asc';
+                //Default handle
+                request = {!! json_encode(request()->all(), JSON_FORCE_OBJECT) !!};
+
+                if ('{!! $ordering['field'] !!}' == orderField) {
+                    request.{!! $orderConfig['dir'] !!} = '{!! $ordering['dir'] !!}'=='asc' ? 'desc' : 'asc';
+                } else {
+                    request.{!! $orderConfig['field'] !!} = orderField;
+                    request.{!! $orderConfig['dir'] !!} = 'asc';
+                }
+                delete request.page;
+                location.href = '{!! url()->current() !!}' + '?' + $.param(request)
             }
-            delete request.page;
-            location.href = '{!! url()->current() !!}' + '?' + $.param(request)
-        }
-    })
-</script>
+        })
+    </script>
+@endsection

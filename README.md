@@ -25,7 +25,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 @php
     //Prepare attributes of table
     $table = [
-        'data' => $dataArray //Collection or Array passed from controller
+        'data' => $dataArray //array
         'columns' => [
             [
                 'title' => 'Name',
@@ -56,13 +56,20 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
                 'cell' => 'action'
             ]
         ],
-        'base_route' => 'admin.projects'
+        'pagination' => $pagination,
+        'ordering' => [
+             'field' => request('order_by'),
+             'dir' => request('order_dir')
+        ],
+        'attributes' => [
+            'class' => 'table table-responsive-sm table-bordered table-striped table-hover'
+        ]
     ]);
 @endphp
 
 @section('content')
     {{-- Render table with parameters --}}
-    @include('scuti::table', compact('table', 'pagination')) 
+    @include('scuti::table', compact('table')) 
 @endsection
 ```
 Let's see what we got:
@@ -74,7 +81,7 @@ The following properties to configure all Columns that will be generated on Tabl
 
 * `title`
     * The title of the column on header cell.
-* `field`
+* `data`
     * The field name to map with `data` array to display on value cells.
 * `cell`
     * The cell type to display value. Current supported cell types:
@@ -82,15 +89,15 @@ The following properties to configure all Columns that will be generated on Tabl
         * `constant`: transform display value from an array of constants (use values from `options` property).
         * `checkbox`: show checkbox UI with boolean values
         * `action`: default 3 basic actions (view, edit, delete) of each record row. (TODO: be able to customize the actions) 
-* `sortable` (Boolean)
+* `orderable` (Boolean)
     * To config if this column is sortable, the `field` name will be used in query string.
-    * Handle `sortable` column
+    * Handle `orderable` column
         * You can override the default handle of submit sortable field by implement javascript function
         ```blade
         {{-- index.blade.php --}}
         <script>
-            function handleSort(sortField) {
-                console.log('handle sort on field', sortField);
+            function handleOrder(orderField) {
+                console.log('handle order on field', orderField);
             }
         </script>
         ```
